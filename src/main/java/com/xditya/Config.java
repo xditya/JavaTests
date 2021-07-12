@@ -9,5 +9,5 @@ public class Config {
 
     public static String botToken = dotenv.get("botToken");
     public static String botUserName = dotenv.get("botUserName");
-
+    public static String handler = dotenv.get("handler");
 }

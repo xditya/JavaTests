@@ -8,14 +8,19 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
-        String cmd, welcome_msg, res[], command, args;
+        String cmd, welcome_msg, res[], command, args, isCommand;
         cmd = update.getMessage().getText();
         welcome_msg = "Hello. I'm a test bot. Please get lost.";
         res = getArgs(cmd);
-        command = res[0];
-        args = res[1];
-        if (command.equalsIgnoreCase("/start") || command.equalsIgnoreCase("/start" + "@" + getBotUsername()))
+        isCommand = res[0];
+        command = res[1];
+        args = res[2];
+        System.out.println("isCommand: " + isCommand + "\nCommand: " + command + "\nArgs: " + args);
+        if(isCommand == "false")
+            return;
+        if (command.equalsIgnoreCase("start") || command.equalsIgnoreCase("start" + "@" + getBotUsername()))
             if (update.getMessage().getChat().isUserChat() == true)
+                sendmsg(update.getMessage().getChatId().toString(), welcome_msg);
     }
 
     // this func make its easier to send a message to the specified chat.
@@ -32,15 +37,22 @@ public class bot extends TelegramLongPollingBot {
     // this splits the recieved input into a command and the arguments. 
     public String[] getArgs(String cmd) {
         String temp[] = cmd.split(" ");
-        String command="", args="", results[] = new String[2];
+        String command="", args="", results[] = new String[3];
+        if((cmd.charAt(0)) == ((Config.handler).charAt(0)))
+            results[0] = "true";
+        else
+            results[0] = "false";
         for (int i = 0; i < temp.length; i++) {
             if (i == 0)
                 command = temp[i];
             else
                 args += temp[i] + " ";
         }
-        results[0] = command;
-        results[1] = args;
+        if(results[0] == "true")
+            results[1] = command.substring(1);
+        else
+        results[1] = command;
+        results[2] = args;
         return results;
     }
 
