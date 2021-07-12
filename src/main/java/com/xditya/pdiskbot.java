@@ -3,8 +3,8 @@ package com.xditya;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import com.xditya.Config;
 
 public class pdiskbot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
@@ -26,8 +26,20 @@ public class pdiskbot extends TelegramLongPollingBot {
     }
 
     public String getBotUsername() {
-        String username = Config.botUserName;
-        return username;
+        String username = "";
+        try{
+            User me = getMe();
+            username = me.getUserName();
+        }
+        catch(TelegramApiException e){
+            e.printStackTrace();
+        }
+        if(username != "")
+            return username;
+        else {
+            username = Config.botUserName;
+            return username;
+        }
     }
 
     @Override
