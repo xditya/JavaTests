@@ -11,7 +11,7 @@ public class Main {
         try {
             System.out.println("Starting the bot...");
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot((LongPollingBot) new pdiskbot());
+            telegramBotsApi.registerBot((LongPollingBot) new bot());
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

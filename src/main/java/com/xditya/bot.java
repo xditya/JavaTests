@@ -6,15 +6,19 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-public class pdiskbot extends TelegramLongPollingBot {
+public class bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
-        String cmd = update.getMessage().getText();
-        if (cmd.equals("/start")) {
+        String cmd, welcome_msg, res[], command, args;
+        cmd = update.getMessage().getText();
+        welcome_msg = "Hello. I'm a test bot. Please get lost.";
+        res = getArgs(cmd);
+        command = res[0];
+        args = res[1];
+        if (command.equalsIgnoreCase("/start") || command.equalsIgnoreCase("/start" + "@" + getBotUsername()))
             if (update.getMessage().getChat().isUserChat() == true)
-                sendmsg(update.getMessage().getChatId().toString(), "Hi. I am a pdisk uploader bot. Send me a direct video link and I'll upload it to pdisk.\n\n@xditya.");
-        }
     }
 
+    // this func make its easier to send a message to the specified chat.
     public void sendmsg(String chatid, String text) {
         SendMessage msg = new SendMessage(chatid, text);
         msg.enableHtml(true);
@@ -23,6 +27,21 @@ public class pdiskbot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+    }
+
+    // this splits the recieved input into a command and the arguments. 
+    public String[] getArgs(String cmd) {
+        String temp[] = cmd.split(" ");
+        String command="", args="", results[] = new String[2];
+        for (int i = 0; i < temp.length; i++) {
+            if (i == 0)
+                command = temp[i];
+            else
+                args += temp[i] + " ";
+        }
+        results[0] = command;
+        results[1] = args;
+        return results;
     }
 
     public String getBotUsername() {
@@ -37,6 +56,7 @@ public class pdiskbot extends TelegramLongPollingBot {
         if(username != "")
             return username;
         else {
+            System.out.println("Getting botUserName from env vars...");
             username = Config.botUserName;
             return username;
         }
