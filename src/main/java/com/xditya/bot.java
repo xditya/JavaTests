@@ -26,9 +26,11 @@ public class bot extends TelegramLongPollingBot {
     public void doPluginAction(Update update, String command, String args) {
         new start().commandInvoked(update, command, args);
         new help().commandInvoked(update, command, args);
+        new lyrics().commandInvoked(update, command, args);
     }
 
-    // this func make its easier to send a message to the specified chat (parses as markdown).
+    // this func make its easier to send a message to the specified chat (parses as
+    // markdown).
     public void sendmsg(String chatid, String text) {
         SendMessage msg = new SendMessage(chatid, text);
         msg.enableMarkdown(true);
