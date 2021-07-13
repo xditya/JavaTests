@@ -1,4 +1,4 @@
-package com.xditya;
+package com.xditya.helpers;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import io.github.cdimascio.dotenv.DotenvBuilder;

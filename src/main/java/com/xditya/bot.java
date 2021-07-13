@@ -1,11 +1,12 @@
 package com.xditya;
 
+import com.xditya.helpers.Config;
+
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 public class bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         String cmd, welcome_msg, res[], command, args, isCommand;
@@ -18,6 +19,8 @@ public class bot extends TelegramLongPollingBot {
         System.out.println("isCommand: " + isCommand + "\nCommand: " + command + "\nArgs: " + args);
         if(isCommand == "false")
             return;
+        else
+            System.out.println("Command Invoked.");  // #TODO - Fucntion call.
         if (command.equalsIgnoreCase("start") || command.equalsIgnoreCase("start" + "@" + getBotUsername()))
             if (update.getMessage().getChat().isUserChat() == true)
                 sendmsg(update.getMessage().getChatId().toString(), welcome_msg);
@@ -48,11 +51,14 @@ public class bot extends TelegramLongPollingBot {
             else
                 args += temp[i] + " ";
         }
-        if(results[0] == "true")
+        if(results[0] == "true") {
             results[1] = command.substring(1);
-        else
-        results[1] = command;
-        results[2] = args;
+            results[2] = args;
+        }
+        else {
+            results[1] = "";
+            results[2] = command + " " + args;
+        }
         return results;
     }
 
