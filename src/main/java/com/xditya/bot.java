@@ -1,35 +1,38 @@
 package com.xditya;
 
 import com.xditya.helpers.Config;
-
+import com.xditya.plugins.*;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
 public class bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
-        String cmd, welcome_msg, res[], command, args, isCommand;
+        String cmd, res[], command, args, isCommand;
         cmd = update.getMessage().getText();
-        welcome_msg = "Hello. I'm a test bot. Please get lost.";
         res = getArgs(cmd);
-        isCommand = res[0];
-        command = res[1];
-        args = res[2];
-        System.out.println("isCommand: " + isCommand + "\nCommand: " + command + "\nArgs: " + args);
-        if(isCommand == "false")
-            return;
+        isCommand = res[0]; // "true", if the update text starts with handler, or "false"
+        command = res[1]; // the command used, excluding the hanlder, or None if isCommand is "false"
+        args = res[2]; // the text after the command, or None if the command has no following text, or the whole update text, if isCommand is "false"
+        if (isCommand == "false")
+            return;  // we handle only commands, as of now.
         else
-            System.out.println("Command Invoked.");  // #TODO - Fucntion call.
-        if (command.equalsIgnoreCase("start") || command.equalsIgnoreCase("start" + "@" + getBotUsername()))
-            if (update.getMessage().getChat().isUserChat() == true)
-                sendmsg(update.getMessage().getChatId().toString(), welcome_msg);
+            doPluginAction(update, command, args); // handle commands
+    }
+
+    public void doPluginAction(Update update, String command, String args) {
+        new start().commandInvoked(update, command, args);
+        new help().commandInvoked(update, command, args);
     }
 
     // this func make its easier to send a message to the specified chat.
     public void sendmsg(String chatid, String text) {
         SendMessage msg = new SendMessage(chatid, text);
-        msg.enableHtml(true);
+        // msg.enableHtml(true);
+        // TODO - markdown chooser.
+        msg.enableMarkdown(true);
         try {
             execute(msg);
         } catch (TelegramApiException e) {
@@ -37,11 +40,11 @@ public class bot extends TelegramLongPollingBot {
         }
     }
 
-    // this splits the recieved input into a command and the arguments. 
+    // this splits the recieved input into a command and the arguments.
     public String[] getArgs(String cmd) {
         String temp[] = cmd.split(" ");
-        String command="", args="", results[] = new String[3];
-        if((cmd.charAt(0)) == ((Config.handler).charAt(0)))
+        String command = "", args = "", results[] = new String[3];
+        if ((cmd.charAt(0)) == ((Config.handler).charAt(0)))
             results[0] = "true";
         else
             results[0] = "false";
@@ -51,11 +54,10 @@ public class bot extends TelegramLongPollingBot {
             else
                 args += temp[i] + " ";
         }
-        if(results[0] == "true") {
+        if (results[0] == "true") {
             results[1] = command.substring(1);
             results[2] = args;
-        }
-        else {
+        } else {
             results[1] = "";
             results[2] = command + " " + args;
         }
@@ -64,14 +66,13 @@ public class bot extends TelegramLongPollingBot {
 
     public String getBotUsername() {
         String username = "";
-        try{
+        try {
             User me = getMe();
             username = me.getUserName();
-        }
-        catch(TelegramApiException e){
+        } catch (TelegramApiException e) {
             e.printStackTrace();
         }
-        if(username != "")
+        if (username != "")
             return username;
         else {
             System.out.println("Getting botUserName from env vars...");
