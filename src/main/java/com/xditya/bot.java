@@ -15,9 +15,10 @@ public class bot extends TelegramLongPollingBot {
         res = getArgs(cmd);
         isCommand = res[0]; // "true", if the update text starts with handler, or "false"
         command = res[1]; // the command used, excluding the hanlder, or None if isCommand is "false"
-        args = res[2]; // the text after the command, or None if the command has no following text, or the whole update text, if isCommand is "false"
+        args = res[2]; // the text after the command, or None if the command has no following text, or
+                       // the whole update text, if isCommand is "false"
         if (isCommand == "false")
-            return;  // we handle only commands, as of now.
+            return; // we handle only commands, as of now.
         else
             doPluginAction(update, command, args); // handle commands
     }
@@ -27,12 +28,24 @@ public class bot extends TelegramLongPollingBot {
         new help().commandInvoked(update, command, args);
     }
 
-    // this func make its easier to send a message to the specified chat.
+    // this func make its easier to send a message to the specified chat (parses as markdown).
     public void sendmsg(String chatid, String text) {
         SendMessage msg = new SendMessage(chatid, text);
-        // msg.enableHtml(true);
-        // TODO - markdown chooser.
         msg.enableMarkdown(true);
+        try {
+            execute(msg);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // the same sendmsg function with a definable parse mode, as "html" or "md"
+    public void sendmsg(String chatid, String text, String parse_mode) {
+        SendMessage msg = new SendMessage(chatid, text);
+        if (parse_mode == "html")
+            msg.enableHtml(true);
+        else if (parse_mode == "md" || parse_mode == "markdown" || parse_mode == null)
+            msg.enableMarkdown(true);
         try {
             execute(msg);
         } catch (TelegramApiException e) {

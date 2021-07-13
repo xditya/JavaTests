@@ -9,6 +9,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class help extends bot implements pluginHandler{
     public void commandInvoked(Update update, String command, String args) {
         if(command.equals("help") || command.equals("help@" + getBotUsername()))
-            sendmsg(update.getMessage().getChatId().toString(), "*Help menu.*\n- `" + Config.handler + "start`");
+            sendmsg(update.getMessage().getChatId().toString(), "<b>Help menu.</b>\n- <code>" + Config.handler + "start</code>", "html");
     }
 }
