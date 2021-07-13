@@ -1,12 +1,14 @@
 package com.xditya.plugins;
 
-import com.xditya.pluginHandler;
-import com.xditya.helpers.Config;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+import org.json.JSONObject;
+import org.json.JSONArray;
 import com.xditya.bot;
+import com.xditya.pluginHandler;
+import com.xditya.helpers.Config;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -34,8 +36,14 @@ public class lyrics extends bot implements pluginHandler {
                         while (sc.hasNext()) {
                             results += sc.nextLine();
                         }
-                        sendmsg(chatID, "Results: \n `" + results + "`");
                         sc.close();
+                        JSONArray array = new JSONArray("[" + results + "]");
+                        /*
+                         * for (int i = 0; i < array.length(); i++) { we do not iter here, because the
+                         * api returns just one match, and not a list.
+                         */
+                        JSONObject object = array.getJSONObject(0);
+                        sendmsg(chatID, object.getString("lyrics").replace("EmbedShare URLCopyEmbedCopy", ""));
                     }
                     conn.disconnect();
                 } catch (Exception e) {
