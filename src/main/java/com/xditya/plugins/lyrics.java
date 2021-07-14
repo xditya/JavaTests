@@ -17,7 +17,7 @@ public class lyrics extends bot implements pluginHandler {
         if (command.equals("lyrics") || command.equals("lyrics@" + getBotUsername())) {
             String chatID = update.getMessage().getChatId().toString(), results = "";
             if (args.length() == 0) {
-                sendmsg(chatID, "Please use `" + Config.handler + "lyrics <song name>`");
+                sendMessage(chatID, "Please use `" + Config.handler + "lyrics <song name>`");
                 return;
             } else {
                 String base_url = "http://jostapi.notavailable.live/lyrics/";
@@ -29,7 +29,7 @@ public class lyrics extends bot implements pluginHandler {
                     conn.setRequestMethod("GET");
                     int responsecode = conn.getResponseCode();
                     if (responsecode != 200) {
-                        sendmsg(chatID, "API is down/unrechable at the moment!");
+                        sendMessage(chatID, "API is down/unrechable at the moment!");
                         return;
                     } else {
                         Scanner sc = new Scanner(url.openStream());
@@ -43,7 +43,7 @@ public class lyrics extends bot implements pluginHandler {
                          * api returns just one match, and not a list.
                          */
                         JSONObject object = array.getJSONObject(0);
-                        sendmsg(chatID, object.getString("lyrics").replace("EmbedShare URLCopyEmbedCopy", ""));
+                        sendMessage(chatID, object.getString("lyrics").replace("EmbedShare URLCopyEmbedCopy", ""));
                     }
                     conn.disconnect();
                 } catch (Exception e) {
