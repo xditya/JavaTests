@@ -1,0 +1,19 @@
+{
+    "name": "JavaTests",
+    "description": "Test Bot.",
+    "repository": "https://github.com/xditya/JavaTests",
+    "success_url": "https://t.me/BotzHubChat",
+    "stack": "container",
+    "env": {
+        "botToken": {
+            "description": "Token of your bot, from @BotFather.",
+            "value": "",
+            "required": true
+        },
+        "handler": {
+            "description": "The command handler to invoke commands.",
+            "value": "/",
+            "required": false
+        }
+    }
+}

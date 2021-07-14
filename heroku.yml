@@ -1,0 +1,5 @@
+build:
+  docker:
+    worker: Dockerfile
+run:
+  worker: java -jar target/JavaTests-0.1-jar-with-dependencies.jar
