@@ -14,15 +14,17 @@ public class bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         String cmd, res[], command, args, isCommand;
         cmd = update.getMessage().getText();
-        res = getArgs(cmd);
-        isCommand = res[0]; // "true", if the update text starts with handler, or "false"
-        command = res[1]; // the command used, excluding the hanlder, or None if isCommand is "false"
-        args = res[2]; // the text after the command, or None if the command has no following text, or
-                       // the whole update text, if isCommand is "false"
-        if (isCommand == "false")
-            return; // we handle only commands, as of now.
-        else
-            doPluginAction(update, command, args); // handle commands
+        if (cmd != null) {
+            res = getArgs(cmd);
+            isCommand = res[0]; // "true", if the update text starts with handler, or "false"
+            command = res[1]; // the command used, excluding the hanlder, or None if isCommand is "false"
+            args = res[2]; // the text after the command, or None if the command has no following text, or
+                           // the whole update text, if isCommand is "false"
+            if (isCommand == "false")
+                return; // we handle only commands, as of now.
+            else
+                doPluginAction(update, command, args); // handle commands
+        }
     }
 
     public void doPluginAction(Update update, String command, String args) {
@@ -92,7 +94,7 @@ public class bot extends TelegramLongPollingBot {
         }
         if (results[0] == "true") {
             results[1] = command.substring(1);
-            results[2] = args;
+            results[2] = args.trim();
         } else {
             results[1] = "";
             results[2] = command + " " + args;
