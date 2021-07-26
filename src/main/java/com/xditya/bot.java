@@ -32,6 +32,7 @@ public class bot extends TelegramLongPollingBot {
         new help().commandInvoked(update, command, args);
         new lyrics().commandInvoked(update, command, args);
         new ping().commandInvoked(update, command, args);
+        new eval().commandInvoked(update, command, args);
     }
 
     // this func make its easier to send a message to the specified chat (parses as
