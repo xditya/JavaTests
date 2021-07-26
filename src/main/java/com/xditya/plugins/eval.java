@@ -24,7 +24,7 @@ public class eval extends bot implements pluginHandler {
                 sendMessage(chatID, "Done. Wrote to file.");
                 Process process;
                 try {
-                    process = Runtime.getRuntime().exec(new String[] { "java run.java" });
+                    process = Runtime.getRuntime().exec(new String[] { "java ./run.java" });
                     InputStream stdout = process.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(stdout, StandardCharsets.UTF_8));
                     String line;
