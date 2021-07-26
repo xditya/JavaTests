@@ -1,10 +1,10 @@
 package com.xditya.plugins;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 
 import com.xditya.helpers.Config;
-import com.xditya.helpers.send;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -22,14 +22,30 @@ public class eval extends bot implements pluginHandler {
             boolean done = WriteToFile(args);
             if (done) {
                 sendMessage(chatID, "Done. Wrote to file.");
-                new send().file(update, "run.java", "Done. Written to file.");
-                Path fileToDeletePath = Paths.get("run.java");
+                Process process;
                 try {
-                    Files.delete(fileToDeletePath);
-                    sendMessage(chatID, "Deleted File.");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    process = Runtime.getRuntime().exec(new String[] { "java run.java" });
+                    InputStream stdout = process.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(stdout, StandardCharsets.UTF_8));
+                    String line;
+                    try {
+                        while ((line = reader.readLine()) != null) {
+                            System.out.println("stdout: " + line);
+                        }
+                    } catch (IOException e) {
+                        System.out.println("Exception in reading output" + e.toString());
+                    }
+                } catch (Exception e) {
+                    System.out.println("Exception Raised" + e.toString());
                 }
+            }
+
+            Path fileToDeletePath = Paths.get("run.java");
+            try {
+                Files.delete(fileToDeletePath);
+                sendMessage(chatID, "Deleted File.");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
