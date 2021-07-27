@@ -23,7 +23,10 @@ public class eval extends bot implements pluginHandler {
                 return;
             }
             boolean done = WriteToFile(
-                    "class run {\n   public static void main(String args[]) {\n      " + args + "\n   }\n}");
+                    "import org.telegram.telegrambots.bots.TelegramLongPollingBot;\nimport org.telegram.telegrambots.meta.api.objects.Update;\n\npublic class run extends TelegramLongPollingBot {\n    public void main(Update update) {\n   "
+                            + args + "    }\n}");
+            // "class run {\n public static void main(String args[]) {\n " + args + "\n
+            // }\n}");
             if (done) {
                 msgID = sendMessage(chatID, "Done. Wrote to file.").getMessageId();
                 Process process;
